@@ -1,4 +1,4 @@
-import Highlight from "../highlight";
+import About from "@/components/about";
 import Arrow from "./arrow";
 import Badges from "./badges";
 import Grid from "./grid";
@@ -16,7 +16,7 @@ function Hero() {
       <Arrow href="#grid" />
       <Grid />
       <Arrow href="#highlight" />
-      <Highlight />
+      <About />
       <Badges />
       <Title />
       <HeroForm />

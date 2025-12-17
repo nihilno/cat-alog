@@ -139,4 +139,53 @@
   .button-hover {
     @apply transition-all duration-300 ease-in-out hover:-translate-y-0.5;
   }
+
+  .fire-border {
+    position: relative;
+    border: 2px solid transparent;
+    border-radius: 0.75rem; /* matches rounded-xl */
+    z-index: 0;
+  }
+
+  .fire-border::before {
+    content: "";
+    position: absolute;
+    inset: -2px; /* extend slightly beyond the element */
+    border-radius: inherit;
+    padding: 2px;
+    background: linear-gradient(
+      45deg,
+      #ff0000,
+      #ff9900,
+      #ffff00,
+      #ff9900,
+      #ff0000
+    );
+    background-size: 400% 400%;
+    animation: fireGlow 6s linear infinite;
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    z-index: -1;
+  }
+
+  img,
+  svg,
+  video {
+    user-select: none;
+  }
+
+  @keyframes fireGlow {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
 }

@@ -11,7 +11,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Price Bookmarker",
+  title: "tbd",
 };
 
 export default function RootLayout({
@@ -31,7 +31,7 @@ export default function RootLayout({
           className="fixed inset-0 -z-10 h-full w-full object-cover"
         >
           <source
-            src="/optimized-downscaled-keyframed.webm"
+            src="/bg-optimized-downscaled-keyframed.webm"
             type="video/webm"
           />
         </video>
