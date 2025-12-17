@@ -3,7 +3,7 @@ import { Button } from "../ui/button";
 
 function SignInButton() {
   return (
-    <Button className="button-hover" size="sm" variant="outline">
+    <Button className="button-hover" size="sm">
       <PiSignInBold />
       <span>Sign In</span>
     </Button>

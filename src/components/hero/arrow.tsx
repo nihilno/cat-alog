@@ -4,8 +4,8 @@ import { BsArrowDown } from "react-icons/bs";
 function Arrow({ href }: { href: string }) {
   return (
     <div className="grid h-64 w-full place-items-center md:h-100">
-      <Link href={href} className="grid size-12 place-items-center">
-        <BsArrowDown className="size-6 animate-bounce" />
+      <Link href={href} className="group grid size-12 place-items-center">
+        <BsArrowDown className="size-6 animate-bounce group-hover:text-[var(--primary)]" />
       </Link>
     </div>
   );
