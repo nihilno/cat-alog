@@ -21,19 +21,28 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={cn(
-          inter.className,
-          "container mx-auto flex min-h-dvh flex-col px-[5vw] antialiased",
-        )}
-      >
-        <Providers>
-          <Header />
-          <main className="my-8 flex-1 rounded-xl border px-[4vw] shadow-sm backdrop-blur-md dark:shadow-md">
-            {children}
-          </main>
-          <Footer />
-        </Providers>
+      <body className={cn(inter.className, "relative min-h-dvh antialiased")}>
+        <video
+          autoPlay
+          muted
+          playsInline
+          loop
+          poster="/bg-poster.webp"
+          className="fixed inset-0 -z-10 h-full w-full object-cover"
+        >
+          <source
+            src="/optimized-downscaled-keyframed.webm"
+            type="video/webm"
+          />
+        </video>
+
+        <div className="sm:text-lg">
+          <Providers>
+            <Header />
+            <main className="my-8 px-4">{children}</main>
+            <Footer />
+          </Providers>
+        </div>
       </body>
     </html>
   );
