@@ -43,7 +43,7 @@ function MainMarquee() {
       className="bg-primary/50 mt-48 mb-32 flex size-full items-center justify-center backdrop-blur-2xl"
       ref={marqueeRef}
     >
-      <Marquee id="marquee">
+      <Marquee>
         <MarqueeFade side="left" />
         <MarqueeFade side="right" />
         <MarqueeContent className="py-2">
