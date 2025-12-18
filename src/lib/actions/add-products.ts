@@ -2,10 +2,10 @@
 
 import { scrapeProduct } from "@/lib/firecrawl";
 import { createClient } from "@/lib/supabase/server";
+import { revalidatePath } from "next/cache";
 
 export async function addProduct(formData: FormData) {
-  const rawUrl = formData.get("url" as string);
-
+  const rawUrl = formData.get("url");
   if (!rawUrl || typeof rawUrl !== "string") {
     return { success: false, error: "URL is required." };
   }
@@ -74,18 +74,29 @@ export async function addProduct(formData: FormData) {
       !alreadyExists || existingProduct.current_price !== productPrice;
 
     if (addToHistory) {
-      await supabase.from("price_history").insert({
-        product_id: product.id,
-        price: productPrice,
-        currency,
-      });
+      const { error: historyError } = await supabase
+        .from("price_history")
+        .insert({
+          product_id: product.id,
+          price: productPrice,
+          currency,
+        });
+
+      if (historyError) {
+        console.error("Failed to add price history:", historyError);
+        return {
+          success: false,
+          error: "Could not access product history.",
+        };
+      }
     }
+    revalidatePath("/watchlist");
 
     return {
       success: true,
       product,
       message: alreadyExists
-        ? "Product succesfully updated with latest price."
+        ? "Product successfully updated with latest price."
         : "Product added to the watchlist successfully.",
     };
   } catch (error) {

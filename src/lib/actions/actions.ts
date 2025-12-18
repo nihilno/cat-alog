@@ -25,7 +25,7 @@ export async function deleteProduct(id: string) {
   }
 }
 
-export async function getProducts() {
+export async function getProducts(): Promise<GetProductsResult> {
   try {
     const supabase = await createClient();
     const { data: products, error } = await supabase
@@ -38,7 +38,10 @@ export async function getProducts() {
       throw new Error("Could not fetch your products. Try again later.");
     }
 
-    return products || [];
+    return {
+      success: true,
+      products,
+    };
   } catch (error) {
     console.error(error);
     return {
@@ -48,7 +51,9 @@ export async function getProducts() {
   }
 }
 
-export async function getPriceHistory(id: string) {
+export async function getPriceHistory(
+  id: string,
+): Promise<GetPriceHistoryResult> {
   try {
     const supabase = await createClient();
     const { data: history, error } = await supabase
@@ -62,7 +67,10 @@ export async function getPriceHistory(id: string) {
       throw new Error("Could not fetch price history. Try again later.");
     }
 
-    return history || [];
+    return {
+      success: true,
+      history,
+    };
   } catch (error) {
     console.error(error);
     return {

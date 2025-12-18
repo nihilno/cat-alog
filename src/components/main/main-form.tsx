@@ -31,6 +31,7 @@ function MainForm() {
           description: result.error || "Reason unknown.",
         });
       } else {
+        setUrl("");
         toast.success(result.message || "Product tracked...", {
           description: (
             <Link
@@ -44,9 +45,12 @@ function MainForm() {
       }
     } catch (error) {
       console.error(error);
+      toast.error("Something went wrong.", {
+        description:
+          "Please try again or contact support if the issue persists.",
+      });
     } finally {
       setIsLoading(false);
-      setUrl("");
     }
   }
 

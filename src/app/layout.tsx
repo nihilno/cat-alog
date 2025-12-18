@@ -12,8 +12,8 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    template: "%s | Home",
-    default: "Pounce | Home",
+    template: "%s | Pounce",
+    default: "Home | Pounce",
   },
 };
 
