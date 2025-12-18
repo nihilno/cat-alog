@@ -12,13 +12,20 @@ function Modal(props: ModalProps) {
     <Dialog {...props}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Sign in to continue</DialogTitle>
-          <DialogDescription>
-            Sign in with your Google account to access all features and save
-            your bookmarks.
+          <DialogTitle className="mb-2 flex flex-col items-center gap-2 text-center text-2xl font-bold">
+            Sign in with Google
+          </DialogTitle>
+          <DialogDescription className="text-muted-foreground mx-auto max-w-[35ch] text-center text-sm">
+            One click, infinite features — your bookmarks live safely with
+            Google.
           </DialogDescription>
         </DialogHeader>
-        <SignInGoogle />
+        <div className="flex flex-col items-center gap-4 py-6">
+          <SignInGoogle />
+          <p className="text-muted-foreground mt-6 text-center text-xs">
+            Powered by Google’s secure authentication
+          </p>
+        </div>
       </DialogContent>
     </Dialog>
   );

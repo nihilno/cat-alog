@@ -1,73 +1,23 @@
 "use client";
 
-import { createClient } from "@/lib/supabase/client";
-import { cn } from "@/lib/utils";
-import type { User } from "@supabase/supabase-js";
-import { Loader2Icon, UserPlus } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
-import { Button } from "../ui/button";
-import Modal from "./modal";
-import SignOut from "./sign-out";
+import { useSession } from "@/app/hooks/useSession";
+import { User } from "lucide-react";
+import Image from "next/image";
 
 function UserBtn() {
-  const supabase = useMemo(() => createClient(), []);
-  const [isOpen, setIsOpen] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
-  const [isLoadingSession, setIsLoadingSession] = useState(true);
+  const { user } = useSession();
+  const avatar = user?.user_metadata.avatar_url || null;
 
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      setUser(data.session?.user ?? null);
-      setIsLoadingSession(false);
-    });
-
-    const { data: subscription } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setUser(session?.user ?? null);
-        setIsLoadingSession(false);
-      },
-    );
-
-    return () => {
-      subscription.subscription.unsubscribe();
-    };
-  }, [supabase]);
-
-  function handleClick() {
-    if (!user) {
-      setIsOpen(true);
-    }
-  }
-
-  if (isLoadingSession) {
-    return (
-      <Button
-        variant="ghost"
-        size="icon-sm"
-        disabled
-        className="button-hover hover:text-primary hover:bg-background!"
-      >
-        <Loader2Icon className="size-5 animate-spin" />
-      </Button>
-    );
-  }
-
-  return user ? (
-    <SignOut />
+  return avatar ? (
+    <Image
+      src={avatar}
+      width={24}
+      height={24}
+      alt="Avatar"
+      className="button-hover cursor-pointer rounded-full"
+    />
   ) : (
-    <>
-      <Button
-        variant="ghost"
-        size="icon-sm"
-        className={cn("button-hover hover:text-primary hover:bg-background!")}
-        onClick={handleClick}
-      >
-        <UserPlus
-          className={cn("size-5.5", isOpen ? "text-primary animate-pulse" : "")}
-        />
-      </Button>
-      <Modal open={isOpen} onOpenChange={setIsOpen} />
-    </>
+    <User className="button-hover hover:text-primary size-6 cursor-pointer" />
   );
 }
 

@@ -14,7 +14,7 @@ function SignOutBtn() {
     setIsLoading(true);
     try {
       await supabase.auth.signOut();
-      toast.success("😸", { description: "Signed out successfully." });
+      toast.success("Sign Out", { description: "Signed out successfully." });
     } catch (error) {
       console.error(error);
 
@@ -23,7 +23,7 @@ function SignOutBtn() {
           ? error.message
           : "An unknown error occurred during sign out.";
 
-      toast.error("😾", { description: message });
+      toast.error("Error", { description: message });
     } finally {
       setIsLoading(false);
     }
