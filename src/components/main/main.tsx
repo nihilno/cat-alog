@@ -1,7 +1,7 @@
+import Arrow from "@/components/global/arrow";
 import About from "@/components/main/about";
 import { CARD_STYLE } from "@/lib/consts";
 import { cn } from "@/lib/utils";
-import Arrow from "../global/arrow";
 import Grid from "./grid";
 import MainForm from "./main-form";
 import MainMarquee from "./marquee";

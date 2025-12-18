@@ -4,7 +4,7 @@ import Link from "next/link";
 
 function Footer() {
   return (
-    <footer className="container mx-auto my-8 px-4">
+    <footer className="container mx-auto px-4">
       <div className="bg-background/50 relative z-50 space-y-12 rounded-xl border-2 px-4 py-4 shadow-md backdrop-blur-md">
         <div className="grid grid-cols-3 gap-6 text-sm">
           {FOOTER_ITEMS.map(({ label, href }) => (

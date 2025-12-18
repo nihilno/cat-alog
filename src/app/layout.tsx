@@ -12,8 +12,8 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    template: "%s | Pounce",
-    default: "Home | Pounce",
+    template: "%s | Cat‑alog",
+    default: "Track Products and Deals | Cat‑alog",
   },
 };
 
@@ -42,7 +42,7 @@ export default function RootLayout({
         <div className="flex h-dvh flex-col sm:text-lg">
           <Providers>
             <Header />
-            <main className="container mx-auto mt-40 mb-8 flex-1 px-4">
+            <main className="container mx-auto mt-36 mb-8 flex-1 px-4">
               {children}
             </main>
             <Footer />

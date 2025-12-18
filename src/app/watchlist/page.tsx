@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Watchlist",
+  title: "Your Scratching Post ",
 };
 
 export default function WatchlistPage() {

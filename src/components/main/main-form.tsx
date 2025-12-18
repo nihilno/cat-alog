@@ -4,7 +4,7 @@ import Modal from "@/components/auth/modal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useSession } from "@/hooks/useSession";
-import { addProduct } from "@/lib/actions/add-products";
+import { addProduct } from "@/lib/actions/actions";
 import { FORM_BUTTON } from "@/lib/consts";
 import { cn } from "@/lib/utils";
 import { ChevronsRight, Loader2Icon } from "lucide-react";
@@ -27,27 +27,31 @@ function MainForm() {
       const result = await addProduct(formData);
 
       if (!result.success) {
-        toast.error("Could not add product.", {
-          description: result.error || "Reason unknown.",
+        toast.error("Product not added", {
+          description: result.error || "The reason is unknown.",
         });
       } else {
         setUrl("");
-        toast.success(result.message || "Product tracked...", {
+        toast.success(result.message || "Product tracked successfully", {
           description: (
             <Link
-              href="#"
+              href="/watchlist"
               className="flex cursor-pointer items-center gap-2 underline"
             >
-              Check it out <ChevronsRight />
+              View in your watchlist <ChevronsRight className="size-3.5" />
             </Link>
           ),
         });
       }
     } catch (error) {
       console.error(error);
-      toast.error("Something went wrong.", {
-        description:
-          "Please try again or contact support if the issue persists.",
+      const message =
+        error instanceof Error
+          ? error.message
+          : "An unexpected error occurred during submission.";
+
+      toast.error("Submission failed", {
+        description: message,
       });
     } finally {
       setIsLoading(false);
@@ -62,7 +66,7 @@ function MainForm() {
       <Input
         type="url"
         name="url"
-        placeholder="Paste product link..."
+        placeholder="Enter product URL to track."
         className="bg-background! focus-visible:ring-primary focus:ring-primary h-15 w-full px-4 text-sm md:h-18 md:text-base!"
         required
         value={url}

@@ -1,26 +1,123 @@
+"use server";
+
+import { scrapeProduct } from "@/lib/firecrawl";
+import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
-import { createClient } from "../supabase/server";
+
+export async function addProduct(formData: FormData) {
+  const rawUrl = formData.get("url");
+  if (!rawUrl || typeof rawUrl !== "string") {
+    return { success: false, error: "A product URL is required." };
+  }
+
+  const url = rawUrl.trim();
+
+  try {
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      return {
+        success: false,
+        error: "Please sign in to track your purchases.",
+      };
+    }
+
+    const scrapedProduct = await scrapeProduct(url);
+
+    if (!scrapedProduct.productName || !scrapedProduct.currentPrice) {
+      return {
+        success: false,
+        error: "We could not extract product information from this link.",
+      };
+    }
+
+    const productPrice = scrapedProduct.currentPrice;
+    const currency = scrapedProduct.currencyCode || "USD";
+
+    const { data: existingProduct } = await supabase
+      .from("products")
+      .select("id, current_price")
+      .eq("user_id", user.id)
+      .eq("url", url)
+      .maybeSingle();
+
+    const alreadyExists = !!existingProduct;
+
+    const { data: product, error } = await supabase
+      .from("products")
+      .upsert(
+        {
+          user_id: user.id,
+          url,
+          name: scrapedProduct.productName,
+          current_price: productPrice,
+          currency,
+          image_url: scrapedProduct.productImageUrl,
+          updated_at: new Date().toISOString(),
+        },
+        { onConflict: "user_id,url", ignoreDuplicates: false },
+      )
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    const addToHistory =
+      !alreadyExists || existingProduct.current_price !== productPrice;
+
+    if (addToHistory) {
+      const { error: historyError } = await supabase
+        .from("price_history")
+        .insert({
+          product_id: product.id,
+          price: productPrice,
+          currency,
+        });
+
+      if (historyError) {
+        console.error("Failed to add price history:", historyError);
+        return {
+          success: false,
+          error: "Could not update the product's history.",
+        };
+      }
+    }
+
+    revalidatePath("/watchlist");
+
+    return {
+      success: true,
+      product,
+      message: alreadyExists
+        ? "Product updated with the latest price whiskers."
+        : "Product added to your watchlist successfully.",
+    };
+  } catch (error) {
+    console.error(error);
+    return { success: false, error: "Unexpected error while adding product." };
+  }
+}
 
 export async function deleteProduct(id: string) {
   try {
     const supabase = await createClient();
     const { error } = await supabase.from("products").delete().eq("id", id);
 
-    if (error) {
-      console.error(error);
-      throw new Error("Could not delete this product. Try again later.");
-    }
+    if (error) throw error;
 
-    revalidatePath("/");
+    revalidatePath("/watchlist");
     return {
       success: true,
-      message: "Product successfully deleted from watchlist.",
+      message: "Product successfully scratched off your watchlist.",
     };
   } catch (error) {
     console.error(error);
     return {
       success: false,
-      error: "We could not delete this product right now. Try again later.",
+      message: "We could not delete this product right now. Try again later.",
     };
   }
 }
@@ -33,20 +130,14 @@ export async function getProducts(): Promise<GetProductsResult> {
       .select("*")
       .order("created_at", { ascending: false });
 
-    if (error) {
-      console.error(error);
-      throw new Error("Could not fetch your products. Try again later.");
-    }
+    if (error) throw error;
 
-    return {
-      success: true,
-      products,
-    };
+    return { success: true, products };
   } catch (error) {
     console.error(error);
     return {
       success: false,
-      error: "We could not fetch your products right now. Try again later.",
+      error: "We could not fetch your catalog right now.",
     };
   }
 }
@@ -62,20 +153,14 @@ export async function getPriceHistory(
       .eq("product_id", id)
       .order("checked_at", { ascending: true });
 
-    if (error) {
-      console.error(error);
-      throw new Error("Could not fetch price history. Try again later.");
-    }
+    if (error) throw error;
 
-    return {
-      success: true,
-      history,
-    };
+    return { success: true, history };
   } catch (error) {
     console.error(error);
     return {
       success: false,
-      error: "We could not fetch price history right now. Try again later.",
+      error: "We could not fetch this product's history right now.",
     };
   }
 }

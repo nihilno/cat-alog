@@ -14,7 +14,9 @@ function SignOutBtn() {
     setIsLoading(true);
     try {
       await supabase.auth.signOut();
-      toast.success("Sign Out", { description: "Signed out successfully." });
+      toast.success("Signed out", {
+        description: "You’ve safely padded out of your account.",
+      });
     } catch (error) {
       console.error(error);
 
@@ -23,7 +25,9 @@ function SignOutBtn() {
           ? error.message
           : "An unknown error occurred during sign out.";
 
-      toast.error("Error", { description: message });
+      toast.error("Sign out failed", {
+        description: `The cat door wouldn’t open: ${message}`,
+      });
     } finally {
       setIsLoading(false);
     }

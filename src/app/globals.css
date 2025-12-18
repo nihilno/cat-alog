@@ -141,15 +141,6 @@
   }
 }
 
-@utility radial-gradient {
-  background: radial-gradient(
-    circle at center,
-    #434343 0%,
-    #000 50%,
-    transparent 100%
-  );
-}
-
 @layer components {
   .button-hover {
     @apply transition-all duration-300 ease-in-out hover:-translate-y-0.5;
