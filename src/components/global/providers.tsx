@@ -1,4 +1,5 @@
 "use client";
+import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import * as React from "react";
 
@@ -12,6 +13,7 @@ function Providers({ children }: { children: React.ReactNode }) {
         disableTransitionOnChange
       >
         {children}
+        <Toaster />
       </ThemeProvider>
     </>
   );

@@ -5,7 +5,7 @@ function MainForm() {
   return (
     <form className="w-full max-w-2xl space-y-4 px-2 md:px-4">
       <Input
-        type="text"
+        type="url"
         placeholder="Paste product link..."
         className="bg-background! focus-visible:ring-primary focus:ring-primary h-15 w-full px-4 text-sm md:h-18 md:text-base!"
       />

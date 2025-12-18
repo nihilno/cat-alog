@@ -1,5 +1,5 @@
-import About from "@/components/about";
-import Arrow from "./arrow";
+import About from "@/components/main/about";
+import Arrow from "../global/arrow";
 import Grid from "./grid";
 import MainForm from "./main-form";
 import MainMarquee from "./marquee";
