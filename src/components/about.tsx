@@ -32,7 +32,7 @@ function About() {
   return (
     <section
       id="about"
-      className="relative container mx-auto h-dvh max-h-120 w-full max-w-300 scroll-mt-32 overflow-hidden px-4 py-16 lg:max-h-140"
+      className="relative container mx-auto h-dvh max-h-120 w-full scroll-mt-32 overflow-hidden px-4 py-16 lg:max-h-180"
     >
       <Image
         src="/about.webp"
@@ -46,8 +46,8 @@ function About() {
         <h1
           className={cn(
             "p-0.5 text-start font-bold uppercase",
-            isMobile ? "text-7xl leading-15" : "text-5xl leading-13",
-            "sm:text-8xl sm:leading-20 md:text-9xl md:leading-25",
+            isMobile ? "text-5xl leading-13" : "text-7xl leading-15",
+            "sm:text-8xl sm:leading-20 md:text-9xl md:leading-25 xl:text-[190px] xl:leading-36",
           )}
         >
           We <br /> stalk <br /> deals <br /> for <br />

@@ -1,6 +1,6 @@
 "use client";
 
-import { GRID_ITEM } from "@/lib/consts";
+import { GRID_ICON, GRID_ITEM } from "@/lib/consts";
 import { cn } from "@/lib/utils";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
@@ -52,7 +52,7 @@ function Grid() {
       >
         <h3>
           <div className="flex flex-col items-center gap-2 md:gap-4 md:text-lg">
-            <Radar className="group-hover:text-primary mb-1 transition-colors group-hover:animate-ping md:size-8 lg:size-12" />
+            <Radar className={GRID_ICON} />
             <span className="font-bold sm:text-lg md:text-2xl lg:text-3xl">
               Precision Tracking
             </span>
@@ -63,10 +63,10 @@ function Grid() {
       <div className={cn("fire-border group", GRID_ITEM)}>
         <h3>
           <div className="flex flex-col items-center gap-2 md:gap-4 md:text-lg">
-            <Pin className="group-hover:text-primary mb-1 transition-colors group-hover:animate-ping md:size-8 lg:size-12" />
+            <Pin className={GRID_ICON} />
             <span className="font-bold sm:text-lg md:text-2xl lg:text-3xl">
               Seamless Pinning
-            </span>{" "}
+            </span>
             <br /> Save products in one click.
           </div>
         </h3>
@@ -82,7 +82,7 @@ function Grid() {
         />
         <h3 className="absolute inset-0 flex size-full flex-col justify-center bg-black/25 p-4">
           <div className="flex flex-col items-center gap-2 md:gap-4 md:text-lg">
-            <Cat className="group-hover:text-primary mb-1 transition-colors group-hover:animate-ping md:size-8 lg:size-12" />
+            <Cat className={GRID_ICON} />
             <span className="font-bold sm:text-lg md:text-2xl lg:text-3xl">
               Smart Alerts
             </span>{" "}
@@ -93,7 +93,7 @@ function Grid() {
       <div className={cn("fire-border group", GRID_ITEM)}>
         <h3>
           <div className="flex flex-col items-center gap-2 md:gap-4 md:text-lg">
-            <Cloud className="group-hover:text-primary mb-1 transition-colors group-hover:animate-ping md:size-8 lg:size-12" />
+            <Cloud className={GRID_ICON} />
             <span className="font-bold sm:text-lg md:text-2xl lg:text-3xl">
               Cross-platform Sync
             </span>
@@ -118,7 +118,7 @@ function Grid() {
         />
         <h3 className="absolute inset-0 flex size-full flex-col justify-center bg-black/40 p-4">
           <div className="flex flex-col items-center gap-2 md:gap-4 md:text-lg">
-            <ShieldCheck className="group-hover:text-primary mb-1 transition-colors group-hover:animate-ping md:size-8 lg:size-12" />
+            <ShieldCheck className={GRID_ICON} />
             <span className="font-bold sm:text-lg md:text-2xl lg:text-3xl">
               Privacy-First
             </span>{" "}

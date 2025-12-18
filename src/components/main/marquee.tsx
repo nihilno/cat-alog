@@ -40,15 +40,15 @@ function MainMarquee() {
 
   return (
     <div
-      className="bg-primary/50 mt-48 mb-32 flex size-full items-center justify-center backdrop-blur-2xl"
+      className="bg-primary/20 mt-48 mb-32 flex size-full items-center justify-center backdrop-blur-2xl"
       ref={marqueeRef}
     >
       <Marquee>
         <MarqueeFade side="left" />
         <MarqueeFade side="right" />
-        <MarqueeContent className="py-2">
+        <MarqueeContent className="py-8">
           {SPONSORS.map(({ name, img }) => (
-            <MarqueeItem className="h-25 w-25" key={name}>
+            <MarqueeItem className="size-25" key={name}>
               <Image
                 alt={name}
                 className="overflow-hidden rounded-full"
