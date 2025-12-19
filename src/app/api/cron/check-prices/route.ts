@@ -1,4 +1,5 @@
 import { scrapeProduct } from "@/lib/firecrawl";
+import { sendPriceDropAlert } from "@/lib/resend";
 import { createClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
 
@@ -16,13 +17,15 @@ export async function POST(request: Request) {
       process.env.SUPABASE_SERVICE_ROLE_KEY!,
     );
 
-    const { data: products, error: productsError } = await supabase
+    const { data, error: productsError } = await supabase
       .from("products")
       .select("id, user_id, url, current_price, currency, name, image_url");
 
     if (productsError) {
       throw productsError;
     }
+
+    const products: Product[] = data || [];
 
     for (const product of products) {
       try {
@@ -66,7 +69,12 @@ export async function POST(request: Request) {
             const user = data.data.user;
 
             if (user && user.email) {
-              //send actual email
+              const emailResult = await sendPriceDropAlert(
+                user.email,
+                product,
+                oldPrice,
+                newPrice,
+              );
             }
           }
 

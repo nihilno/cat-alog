@@ -15,6 +15,7 @@ declare global {
 
   type Product = {
     id: string;
+    user_id: string;
     url: string;
     name: string;
     current_price: number;

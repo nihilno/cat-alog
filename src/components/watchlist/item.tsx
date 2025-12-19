@@ -9,7 +9,7 @@ import { useRef, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 
 function Item({ product }: { product: Product }) {
-  const { name, current_price, currency, url, image_url, id } = product;
+  const { name, url, image_url, id } = product;
   const { isDeleting, handleDelete } = useDeleteProduct();
   const [isConfirming, setIsConfirming] = useState(false);
   const isMobile = useMediaQuery({ maxWidth: 375 });

@@ -142,7 +142,7 @@ export async function getProducts(): Promise<GetProductsResult> {
     const supabase = await createClient();
     const { data: products, error } = await supabase
       .from("products")
-      .select("name, id, current_price, currency, url, image_url")
+      .select("*")
       .order("created_at", { ascending: false });
 
     if (error) throw error;
@@ -199,9 +199,7 @@ export async function getSingleProduct(
 
     const { data: product, error } = await supabase
       .from("products")
-      .select(
-        "created_at, currency, image_url, name, current_price, url, updated_at, id",
-      )
+      .select("*")
       .eq("id", id)
       .eq("user_id", user.id)
       .single();
