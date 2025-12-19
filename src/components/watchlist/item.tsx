@@ -2,15 +2,30 @@
 
 import { Button } from "@/components/ui/button";
 import { useDeleteProduct } from "@/hooks/useDeleteProduct";
-import { cn, slugify } from "@/lib/utils";
+import { cn, normalizeUrl, slugify } from "@/lib/utils";
 import { Info, Loader2Icon, Radar, Tag, XIcon } from "lucide-react";
 import Link from "next/link";
+import { useRef, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 
 function Item({ product }: { product: Product }) {
   const { name, current_price, currency, url, image_url, id } = product;
   const { isDeleting, handleDelete } = useDeleteProduct();
+  const [isConfirming, setIsConfirming] = useState(false);
   const isMobile = useMediaQuery({ maxWidth: 375 });
+  const btnRef = useRef<HTMLButtonElement>(null);
+
+  async function onDelete(id: string) {
+    if (!isConfirming) {
+      setIsConfirming(true);
+      setTimeout(() => {
+        setIsConfirming(false);
+      }, 3000);
+    } else {
+      await handleDelete(id);
+      setIsConfirming(false);
+    }
+  }
 
   return (
     <article className="group hover:bg-background hover:border-muted-foreground/30 grid grid-cols-1 gap-y-3 border p-2 text-sm backdrop-blur-3xl transition-all duration-300 ease-in-out sm:grid-cols-4 md:px-4 md:text-base">
@@ -34,7 +49,7 @@ function Item({ product }: { product: Product }) {
             <span className={cn(isMobile ? "hidden" : "block")}>More</span>
           </Button>
         </Link>
-        <a href={url} target="_blank">
+        <a href={normalizeUrl(url)} target="_blank">
           <Button
             size="sm"
             className="rounded-sm text-xs md:text-base!"
@@ -49,16 +64,27 @@ function Item({ product }: { product: Product }) {
         </a>
         <Button
           size="sm"
-          className="border-destructive/50! bg-destructive/20! hover:border-destructive/60! hover:bg-destructive/30! rounded-sm text-xs md:text-base!"
+          ref={btnRef}
+          className={cn(
+            "border-destructive/25! bg-destructive/10! hover:border-destructive/20! hover:bg-destructive/15! rounded-sm",
+            isConfirming &&
+              "border-destructive/60! bg-destructive/30! hover:border-destructive/60! hover:bg-destructive/30!",
+          )}
           variant="outline"
           disabled={isDeleting}
-          onClick={() => handleDelete(id)}
+          onClick={() => onDelete(id)}
         >
-          {isDeleting ? (
-            <Loader2Icon className="size-3 shrink-0 animate-spin lg:size-4" />
-          ) : (
-            <XIcon className="size-3 shrink-0 lg:size-4" />
-          )}
+          <div>
+            {isDeleting ? (
+              <div className="flex w-fit items-center gap-1">
+                <Loader2Icon className="size-3 shrink-0 animate-spin lg:size-4" />
+              </div>
+            ) : (
+              <div className="flex w-fit items-center gap-1">
+                <XIcon className="size-3 shrink-0 lg:size-4" />
+              </div>
+            )}
+          </div>
         </Button>
       </div>
 

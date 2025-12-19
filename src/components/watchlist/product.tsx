@@ -1,24 +1,41 @@
 "use client";
 
 import { useDeleteProduct } from "@/hooks/useDeleteProduct";
+import { cn, formatDate, normalizeUrl } from "@/lib/utils";
 import { ChevronLeft, Loader2Icon, Radar, Tag, XIcon } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { Button } from "../ui/button";
+import { ChartLineDots } from "./chart";
 
-function Products({ product }: { product: Product }) {
+function Product(props: ProductProps) {
+  const { product, priceHistory } = props;
   const { name, current_price, currency, url, image_url, id } = product;
   const { isDeleting, handleDelete } = useDeleteProduct();
+  const [isConfirming, setIsConfirming] = useState(false);
   const { replace } = useRouter();
 
   async function onDelete(id: string) {
-    await handleDelete(id);
-    replace("/watchlist");
+    if (!isConfirming) {
+      setIsConfirming(true);
+      setTimeout(() => {
+        setIsConfirming(false);
+      }, 3000);
+    } else {
+      await handleDelete(id);
+      setIsConfirming(false);
+      replace("/watchlist");
+    }
   }
+
   return (
     <div className="flex w-full flex-col items-center gap-12 px-4 text-sm">
       <article className="flex h-full flex-col items-center">
-        <h1 className="mb-12 line-clamp-3 text-xl font-semibold">{name}</h1>
+        <h1 className="mb-12 line-clamp-3 text-xl font-semibold lg:text-2xl">
+          {name}
+        </h1>
         {image_url && (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -36,7 +53,6 @@ function Products({ product }: { product: Product }) {
             <span>{current_price}</span>
             <span>{currency}</span>
           </div>
-          <Radar className="text-primary size-8 animate-pulse" />
         </div>
         <div className="mt-auto space-y-4">
           <div className="flex flex-col items-center gap-4">
@@ -57,7 +73,7 @@ function Products({ product }: { product: Product }) {
                 )}
               </Button>
             </Link>
-            <a href={url} target="_blank">
+            <a href={normalizeUrl(url)} target="_blank">
               <Button
                 size="sm"
                 className="h-10 min-w-50! rounded-sm text-base"
@@ -76,7 +92,11 @@ function Products({ product }: { product: Product }) {
             </a>
             <Button
               size="sm"
-              className="border-destructive/50! bg-destructive/20! hover:border-destructive/60! hover:bg-destructive/30! h-10 min-w-50! rounded-sm text-base"
+              className={cn(
+                "border-destructive/25! bg-destructive/10! hover:border-destructive/20! hover:bg-destructive/15! h-10 min-w-50! rounded-sm text-base",
+                isConfirming &&
+                  "border-destructive/60! bg-destructive/30! hover:border-destructive/60! hover:bg-destructive/30!",
+              )}
               variant="outline"
               disabled={isDeleting}
               onClick={() => onDelete(id)}
@@ -86,20 +106,54 @@ function Products({ product }: { product: Product }) {
               ) : (
                 <div className="flex items-center gap-4">
                   <XIcon className="size-5" />
-                  <span>Delete Product</span>
+                  {isConfirming ? (
+                    <span>Are you sure?</span>
+                  ) : (
+                    <span>Delete Product</span>
+                  )}
                 </div>
               )}
             </Button>
           </div>
         </div>
       </article>
-      <div className="w-full space-y-4">
-        <h2 className="text-xl font-semibold">Price History</h2>
-        <div className="h-60 rounded-md bg-red-500" />
+
+      <div className="w-full max-w-3xl space-y-8 text-center">
+        {!priceHistory.success ? (
+          <p className="text-muted-foreground text-sm">{priceHistory.error} </p>
+        ) : (
+          <div className="rounded-md">
+            <div className="relative mb-8 flex w-full flex-col items-center gap-4 rounded-md border p-6 text-center backdrop-blur-3xl">
+              <h3 className="text-lg font-semibold">
+                The price is now under our watch
+              </h3>
+              <p className="-mt-1">We&apos;ll notify you if it changes.</p>
+              <Radar className="text-primary size-10 animate-pulse" />
+              <p className="opacity-70">
+                Last sniff:{" "}
+                <span>
+                  {formatDate(
+                    priceHistory.history[priceHistory.history.length - 1]
+                      .checked_at,
+                  )}
+                </span>
+              </p>
+              <Image
+                src="/stalker.webp"
+                alt="Stalker"
+                fill
+                className="-z-10 overflow-hidden rounded-md object-cover opacity-50"
+                quality={50}
+              />
+            </div>
+            <ChartLineDots data={priceHistory.history} />
+          </div>
+        )}
+
         <small className="opacity-70">ID: {id}</small>
       </div>
     </div>
   );
 }
 
-export default Products;
+export default Product;

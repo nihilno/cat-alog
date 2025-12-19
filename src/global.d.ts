@@ -27,8 +27,8 @@ declare global {
     | { success: false; error: string };
 
   export type PriceHistory = {
-    id: string;
-    product_id: string;
+    // id: string;
+    // product_id: string;
     price: number;
     currency: string;
     checked_at: string;
@@ -41,4 +41,9 @@ declare global {
   type GetSingleProductResult =
     | { success: true; product: Product }
     | { success: false; error: string };
+
+  type ProductProps = {
+    product: Product;
+    priceHistory: GetPriceHistoryResult;
+  };
 }

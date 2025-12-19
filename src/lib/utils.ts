@@ -12,3 +12,20 @@ export function slugify(name: string): string {
     .replace(/\s+/g, "-")
     .replace(/[^a-z0-9\-ąćęłńóśźż]/gi, "");
 }
+
+export function formatDate(raw: string): string {
+  return new Date(raw).toLocaleString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
+export function normalizeUrl(url: string) {
+  if (!/^https?:\/\//i.test(url)) {
+    return `https://${url}`;
+  }
+  return url;
+}

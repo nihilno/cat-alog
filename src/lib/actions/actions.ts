@@ -164,7 +164,7 @@ export async function getPriceHistory(
     const supabase = await createClient();
     const { data: history, error } = await supabase
       .from("price_history")
-      .select("*")
+      .select("price, currency, checked_at")
       .eq("product_id", id)
       .order("checked_at", { ascending: true });
 

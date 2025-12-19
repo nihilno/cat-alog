@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
-import Products from "@/components/watchlist/products";
-import { getSingleProduct } from "@/lib/actions/actions";
+import Product from "@/components/watchlist/product";
+import { getPriceHistory, getSingleProduct } from "@/lib/actions/actions";
 import { CARD_STYLE } from "@/lib/consts";
 import { cn } from "@/lib/utils";
 import { AlertTriangle, ChevronLeft, Info } from "lucide-react";
@@ -18,6 +18,7 @@ export default async function WatchlistItemPage({
 }) {
   const { id } = await searchParams;
   const data = await getSingleProduct(id);
+  const priceHistory = await getPriceHistory(id);
 
   if (!data.success)
     return (
@@ -52,7 +53,7 @@ export default async function WatchlistItemPage({
   return (
     <section className={cn(CARD_STYLE)}>
       {product ? (
-        <Products product={product} />
+        <Product product={product} priceHistory={priceHistory} />
       ) : (
         <div className="flex w-full flex-col items-center gap-4">
           <Info className="text-destructive size-12 animate-pulse" />
