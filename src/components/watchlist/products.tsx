@@ -11,11 +11,10 @@ function Products({ product }: { product: Product }) {
   const { isDeleting, handleDelete } = useDeleteProduct();
   const { replace } = useRouter();
 
-  function onDelete(id: string) {
-    handleDelete(id);
+  async function onDelete(id: string) {
+    await handleDelete(id);
     replace("/watchlist");
   }
-
   return (
     <div className="flex w-full flex-col items-center gap-12 px-4 text-sm">
       <article className="flex h-full flex-col items-center">
