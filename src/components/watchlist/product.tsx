@@ -2,7 +2,15 @@
 
 import { useDeleteProduct } from "@/hooks/useDeleteProduct";
 import { cn, formatDate, normalizeUrl } from "@/lib/utils";
-import { ChevronLeft, Loader2Icon, Radar, Tag, XIcon } from "lucide-react";
+import {
+  ChevronLeft,
+  Loader2Icon,
+  Radar,
+  Tag,
+  TrendingDown,
+  TrendingUp,
+  XIcon,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -62,8 +70,19 @@ function Product(props: ProductProps) {
         )}
         <div className="mt-6 mb-12 flex flex-col items-center gap-2 text-2xl font-bold">
           <div className="flex items-center gap-2">
-            <span>{current_price}</span>
+            <span>
+              {priceHistory.success
+                ? priceHistory.history[priceHistory.history.length - 1].price
+                : current_price}
+            </span>
             <span>{currency}</span>
+            {priceHistory.success &&
+            priceHistory.history[priceHistory.history.length - 1].price <
+              current_price ? (
+              <TrendingUp className="size-7 animate-pulse text-red-500" />
+            ) : (
+              <TrendingDown className="size-7 animate-pulse text-green-500" />
+            )}
           </div>
         </div>
         <div className="mt-auto space-y-4">
