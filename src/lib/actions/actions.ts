@@ -104,7 +104,22 @@ export async function addProduct(formData: FormData) {
 export async function deleteProduct(id: string) {
   try {
     const supabase = await createClient();
-    const { error } = await supabase.from("products").delete().eq("id", id);
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      return {
+        success: false,
+        message: "Please sign in to delete products.",
+      };
+    }
+
+    const { error } = await supabase
+      .from("products")
+      .delete()
+      .eq("id", id)
+      .eq("user_id", user.id);
 
     if (error) throw error;
 
@@ -121,7 +136,6 @@ export async function deleteProduct(id: string) {
     };
   }
 }
-
 export async function getProducts(): Promise<GetProductsResult> {
   try {
     const supabase = await createClient();

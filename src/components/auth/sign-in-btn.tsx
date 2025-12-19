@@ -1,10 +1,10 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { useSession } from "@/hooks/useSession";
 import { cn } from "@/lib/utils";
 import { Loader2Icon, UserPlus } from "lucide-react";
 import { useState } from "react";
-import { Button } from "../ui/button";
 import Modal from "./modal";
 import SignOut from "./sign-out";
 

@@ -1,9 +1,9 @@
 "use client";
 
 import SignInBtn from "@/components/auth/sign-in-btn";
+import UserBtn from "@/components/auth/user-btn";
 import { Radar, Settings } from "lucide-react";
 import Link from "next/link";
-import UserBtn from "../auth/user-btn";
 import Logo from "./logo";
 
 function Header() {

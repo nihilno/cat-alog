@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Product Paw‑prints ",
+  title: "Product Paw‑prints",
 };
 
 export default function WatchlistItemPage() {

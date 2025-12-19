@@ -1,8 +1,8 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { Cat } from "lucide-react";
 import Link from "next/link";
-import { Button } from "../ui/button";
 
 function Logo() {
   return (
