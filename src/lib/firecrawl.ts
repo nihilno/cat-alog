@@ -1,12 +1,15 @@
 import Firecrawl from "@mendable/firecrawl-js";
+import { validateProductUrl } from "./validateProductUrl";
 
 const firecrawl = new Firecrawl({
   apiKey: process.env.FIRECRAWL_API_KEY,
 });
 
 export async function scrapeProduct(url: string) {
+  const safeUrl = validateProductUrl(url);
+
   try {
-    const result = await firecrawl.scrape(url, {
+    const result = await firecrawl.scrape(safeUrl, {
       formats: [
         {
           type: "json",

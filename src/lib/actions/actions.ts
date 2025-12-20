@@ -4,6 +4,7 @@ import { scrapeProduct } from "@/lib/firecrawl";
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import { cache } from "react";
+import { validateProductUrl } from "../validateProductUrl";
 
 export async function addProduct(formData: FormData) {
   const rawUrl = formData.get("url");
@@ -11,7 +12,16 @@ export async function addProduct(formData: FormData) {
     return { success: false, error: "A product URL is required." };
   }
 
-  const url = rawUrl.trim();
+  let url: string;
+  try {
+    url = validateProductUrl(rawUrl.trim());
+  } catch (error) {
+    return {
+      success: false,
+      error:
+        error instanceof Error ? error.message : "This URL cannot be scraped.",
+    };
+  }
 
   try {
     const supabase = await createClient();

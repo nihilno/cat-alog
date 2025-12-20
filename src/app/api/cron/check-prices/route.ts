@@ -1,5 +1,6 @@
 import { scrapeProduct } from "@/lib/firecrawl";
 import { sendPriceDropAlert } from "@/lib/resend";
+import { validateProductUrl } from "@/lib/validateProductUrl";
 import { createClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
 
@@ -21,22 +22,36 @@ export async function POST(request: Request) {
       .from("products")
       .select("id, user_id, url, current_price, currency, name, image_url");
 
-    if (productsError) {
-      throw productsError;
-    }
+    if (productsError) throw productsError;
 
     const products: Product[] = data || [];
 
     for (const product of products) {
       try {
-        const productData = await scrapeProduct(product.url);
-
-        if (!productData || !productData.currentPrice) {
+        let safeUrl: string;
+        try {
+          safeUrl = validateProductUrl(product.url);
+        } catch (err) {
+          console.error(
+            "Skipping product with unsafe URL:",
+            product.id,
+            product.url,
+            err,
+          );
           continue;
         }
 
+        const productData = await scrapeProduct(safeUrl);
+
+        if (!productData || !productData.currentPrice) continue;
+
         const newPrice = productData.currentPrice;
         const oldPrice = product.current_price as number;
+
+        if (newPrice <= 0 || newPrice > 1_000_000) {
+          console.error("Unrealistic price for product:", product.id, newPrice);
+          continue;
+        }
 
         const { error: updateError } = await supabase
           .from("products")
@@ -48,6 +63,7 @@ export async function POST(request: Request) {
             updated_at: new Date().toISOString(),
           })
           .eq("id", product.id);
+
         if (updateError) {
           console.error("Error updating product:", product.id, updateError);
           continue;
@@ -60,11 +76,18 @@ export async function POST(request: Request) {
               product_id: product.id,
               price: newPrice,
               currency: productData.currencyCode || product.currency,
-              // add checked_at timestamp?
+              checked_at: new Date().toISOString(),
             });
 
+          if (historyError) {
+            console.error(
+              "Error inserting price history for product:",
+              product.id,
+              historyError,
+            );
+          }
+
           if (newPrice < oldPrice) {
-            // send notification
             const data = await supabase.auth.admin.getUserById(product.user_id);
             const user = data.data.user;
 
@@ -75,15 +98,15 @@ export async function POST(request: Request) {
                 oldPrice,
                 newPrice,
               );
-            }
-          }
 
-          if (historyError) {
-            console.error(
-              "Error inserting price history for product:",
-              product.id,
-              historyError,
-            );
+              if (!emailResult.success) {
+                console.error(
+                  "Error sending price drop email:",
+                  product.id,
+                  emailResult.error,
+                );
+              }
+            }
           }
         }
       } catch (error) {
