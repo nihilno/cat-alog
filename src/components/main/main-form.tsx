@@ -27,7 +27,7 @@ function MainForm() {
       const result = await addProduct(formData);
 
       if (!result.success) {
-        toast.error("Product not added", {
+        toast.error("Product not added.", {
           description: result.error || "The reason is unknown.",
         });
       } else {
@@ -50,7 +50,7 @@ function MainForm() {
           ? error.message
           : "An unexpected error occurred during submission.";
 
-      toast.error("Submission failed", {
+      toast.error("Submission failed.", {
         description: message,
       });
     } finally {
